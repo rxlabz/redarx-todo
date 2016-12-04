@@ -7,7 +7,6 @@ packages
 pubspec.lock
 
 # Files created by dart2js
-*.dart.js
 *.part.js
 *.js.deps
 *.js.map
