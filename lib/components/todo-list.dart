@@ -66,7 +66,7 @@ class TodoItem extends ComponentBase {
     this.target.append(check.render());
     check.onChange.listen((Event v) => dispatch(new Request(
         RequestType.UPDATE_TODO,
-        withValue: new Todo(_todo.label,
+        withData: new Todo(_todo.label,
             check.checked, _todo.uid))));
   }
 

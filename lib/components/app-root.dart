@@ -5,6 +5,7 @@ import 'package:todo_redarx/components/component-base.dart';
 import 'package:todo_redarx/components/todo-footer.dart';
 import 'package:todo_redarx/components/todo-form.dart';
 import 'package:todo_redarx/components/todo-list.dart';
+import 'package:todo_redarx/components/ui-helper.dart';
 import 'package:todo_redarx/mdl/md-card.dart';
 import 'package:todo_redarx/model/model.dart';
 import 'package:todo_redarx/model/todo.dart';
@@ -21,7 +22,14 @@ class AppComponent extends ComponentBase {
 
   List<Todo> archivedTodos = [];
 
-  Stream<TodoModel> model$;
+  Stream<TodoModel> _model$;
+
+  StreamSubscription modelSub;
+
+  set model$(Stream<TodoModel> value) {
+    _model$ = value;
+    listen();
+  }
 
   @override
   set dispatch(Dispatch value) {
@@ -29,20 +37,18 @@ class AppComponent extends ComponentBase {
     subComponents.forEach((c) => c.dispatch = value);
   }
 
-  AppComponent(Element target, Stream<TodoModel> this.model$) : super(target) {
-    listen();
-
+  AppComponent(Element target) : super(target) {
     initView();
   }
 
   void initView() {
-    form = new TodoForm(new DivElement()..classes.add('row')..id = 'form');
+    form = new TodoForm(div(classes:'row',id:'form'));
     children.add(form);
 
     list = new TodoList();
     children.add(list);
 
-    footer = new TodoFooter(new DivElement()..classes.add('row')..id = 'footer');
+    footer = new TodoFooter(div(classes:'row',id:'footer'));
     children.add(footer);
 
     MDCard card = new MDCard(
@@ -51,7 +57,9 @@ class AppComponent extends ComponentBase {
   }
 
   void listen() {
-    model$.listen((TodoModel model) {
+    if( modelSub != null) modelSub.cancel();
+
+    modelSub = _model$.listen((TodoModel model) {
       print('AppComponent.AppComponent onModel ${model}');
       list.todos = model.todos;
       footer.numCompleted = model.numCompleted;

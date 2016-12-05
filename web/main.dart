@@ -10,22 +10,18 @@ final actionMap = new Map<RequestType, CommandBuilder>()
   ..[RequestType.ARCHIVE] = ArchiveCommand.constructor()
   ..[RequestType.UPDATE_TODO] = UpdateTodoCommand.constructor()
   ..[RequestType.CLEAR_ARCHIVES] = ClearArchivesCommand.constructor()
-  ..[RequestType.TOGGLE_SHOW_COMPLETED] = ToggleShowArchivesCommand.constructor();
+  ..[RequestType.TOGGLE_SHOW_COMPLETED] =
+      ToggleShowArchivesCommand.constructor();
 
 void main() {
-
   final cfg = new CommanderConfig<RequestType>(actionMap);
   final store = new Store<TodoModel>(() => new TodoModel.empty());
   final dispatcher = new Dispatcher();
 
   final cmder = new Commander(cfg, store, dispatcher.onRequest);
 
-  var app = new AppComponent(querySelector('#app'), store.data$);
-  app.dispatch = dispatcher.dispatch;
-  app.render();
+  var app = new AppComponent(querySelector('#app') )
+    ..model$ = store.data$
+    ..dispatch = dispatcher.dispatch
+    ..render();
 }
-
-
-
-
-

@@ -1,5 +1,5 @@
 name: 'todo_redarx'
-version: 0.0.1
+version: 0.1
 description: A todo app based on Redarx State management
 author: Erick G. <erick@rxlabz.com>
 
@@ -8,9 +8,10 @@ environment:
 
 dependencies:
   redarx:
+    #path: /Users/Me/projects/tools/redarx
     git:
       url: git://github.com/rxlabz/redarx
-      ref: v0.1.2
+      ref: v0.2.0+1
 
 dev_dependencies:
   browser: '>=0.10.0 <0.11.0'

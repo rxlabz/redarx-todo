@@ -21,7 +21,7 @@ class TodoForm extends ComponentBase {
   void onSubmit(e) {
     if (fldTodo.value == '') return;
     dispatch(
-        new Request(RequestType.ADD_TODO, withValue: new Todo(fldTodo.value)));
+        new Request(RequestType.ADD_TODO, withData: new Todo(fldTodo.value)));
     fldTodo.value = '';
   }
 

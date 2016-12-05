@@ -2,14 +2,6 @@ import 'dart:html';
 
 const String CL_SHADOW = "mdl-shadow--2dp";
 
-/**
- * split a css multi-class string tl Iterable
- */
-Iterable<String> csspl(String t) => t.split(' ');
-
-Element addClasses(String classes, {Element to}) {
-  return to..classes.addAll(classes.split(' '));
-}
 
 /**
  * instantiate a <i> icon
