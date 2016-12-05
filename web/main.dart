@@ -2,9 +2,8 @@ import 'dart:html';
 
 import 'package:redarx/redarx.dart';
 import 'package:todo_redarx/commands.dart';
-import 'package:todo_redarx/components/components.dart';
+import 'package:todo_redarx/components/app-root.dart';
 import 'package:todo_redarx/model/model.dart';
-
 
 final actionMap = new Map<RequestType, CommandBuilder>()
   ..[RequestType.ADD_TODO] = AddTodoCommand.constructor()
@@ -16,15 +15,12 @@ final actionMap = new Map<RequestType, CommandBuilder>()
 void main() {
 
   final cfg = new CommanderConfig<RequestType>(actionMap);
-
   final store = new Store<TodoModel>(() => new TodoModel.empty());
+  final dispatcher = new Dispatcher();
 
-  var dispatcher = new Dispatcher();
   final cmder = new Commander(cfg, store, dispatcher);
-  store.apply();
 
   var app = new AppComponent(querySelector('#app'), store.data$);
-  // todo ? listen to an action stream instead of injecting ?
   app.dispatch = dispatcher.dispatch;
   app.render();
 }
