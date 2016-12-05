@@ -20,7 +20,7 @@ class MDInput extends MDComponent {
     build();
   }
 
-  MDInput.floating(String placeholder) {
+  MDInput.floating(String this.placeholder) {
     build();
     container.classes.add(CL_FLOAT);
   }
