@@ -22,9 +22,9 @@ class AppComponent extends ComponentBase {
 
   List<Todo> archivedTodos = [];
 
-  Stream<TodoModel> _model$;
-
   StreamSubscription modelSub;
+
+  Stream<TodoModel> _model$;
 
   set model$(Stream<TodoModel> value) {
     _model$ = value;
@@ -60,7 +60,6 @@ class AppComponent extends ComponentBase {
     if( modelSub != null) modelSub.cancel();
 
     modelSub = _model$.listen((TodoModel model) {
-      print('AppComponent.AppComponent onModel ${model}');
       list.todos = model.todos;
       footer.numCompleted = model.numCompleted;
       footer.numRemaining = model.numRemaining;

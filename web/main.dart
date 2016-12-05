@@ -5,7 +5,7 @@ import 'package:todo_redarx/commands.dart';
 import 'package:todo_redarx/components/app-root.dart';
 import 'package:todo_redarx/model/model.dart';
 
-final actionMap = new Map<RequestType, CommandBuilder>()
+final requestMap = new Map<RequestType, CommandBuilder>()
   ..[RequestType.ADD_TODO] = AddTodoCommand.constructor()
   ..[RequestType.ARCHIVE] = ArchiveCommand.constructor()
   ..[RequestType.UPDATE_TODO] = UpdateTodoCommand.constructor()
@@ -14,7 +14,7 @@ final actionMap = new Map<RequestType, CommandBuilder>()
       ToggleShowArchivesCommand.constructor();
 
 void main() {
-  final cfg = new CommanderConfig<RequestType>(actionMap);
+  final cfg = new CommanderConfig<RequestType>(requestMap);
   final store = new Store<TodoModel>(() => new TodoModel.empty());
   final dispatcher = new Dispatcher();
 
