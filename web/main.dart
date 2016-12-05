@@ -18,7 +18,7 @@ void main() {
   final store = new Store<TodoModel>(() => new TodoModel.empty());
   final dispatcher = new Dispatcher();
 
-  final cmder = new Commander(cfg, store, dispatcher);
+  final cmder = new Commander(cfg, store, dispatcher.onRequest);
 
   var app = new AppComponent(querySelector('#app'), store.data$);
   app.dispatch = dispatcher.dispatch;
