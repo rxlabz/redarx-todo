@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:redarx/redarx.dart';
-import 'package:todomvc0/commands.dart';
-import 'package:todomvc0/components/component-base.dart';
-import 'package:todomvc0/components/mdl.dart';
-import 'package:todomvc0/model/model.dart';
-import 'package:todomvc0/model/todo.dart';
+import 'package:todo_redarx/commands.dart';
+import 'package:todo_redarx/components/component-base.dart';
+import 'package:todo_redarx/mdl/mdl.dart';
+import 'package:todo_redarx/model/model.dart';
+import 'package:todo_redarx/model/todo.dart';
 
 /**
  * root component
@@ -24,9 +24,9 @@ class AppComponent extends ComponentBase {
   Stream<TodoModel> model$;
 
   @override
-  set dispatcher(Dispatcher value) {
-    super.dispatcher = value;
-    subComponents.forEach((c) => c.dispatcher = value);
+  set dispatch(Dispatch value) {
+    super.dispatch = value;
+    subComponents.forEach((c) => c.dispatch = value);
   }
 
   AppComponent(Element target, Stream<TodoModel> this.model$) : super(target) {
@@ -80,7 +80,7 @@ class TodoForm extends ComponentBase {
 
   void onSubmit(e) {
     if (fldTodo.value == '') return;
-    dispatcher.dispatch(
+    dispatch(
         new Request(RequestType.ADD_TODO, withValue: new Todo(fldTodo.value)));
     fldTodo.value = '';
   }
@@ -108,9 +108,9 @@ class TodoList extends ComponentBase {
   }
 
   @override
-  set dispatcher(Dispatcher value) {
-    super.dispatcher = value;
-    subComponents.forEach((i) => (i as ComponentBase).dispatcher = value);
+  set dispatch(Dispatch value) {
+    super.dispatch = value;
+    subComponents.forEach((c) => c.dispatch = value);
   }
 
   TodoList([Element target = null]) : super(target){
@@ -120,14 +120,13 @@ class TodoList extends ComponentBase {
 
   @override
   render() {
-    print('TodoList.render... ');
     if (_todos == null) return target;
     ul.children = [];
     final children= _todos
         .where((t) => t != null)
         .map((t) => new TodoItem()
           ..todo = t
-          ..dispatcher = dispatcher)
+          ..dispatch = dispatch )
         .map((v) => v.render())
         .toList();
     children.forEach((c)=>ul.append(c) );
@@ -153,7 +152,7 @@ class TodoItem extends ComponentBase {
   TodoItem([Element target = null]) : super(target) {
     check = new MDCheck();
     this.target.append(check.render());
-    check.onChange.listen((Event v) => dispatcher?.dispatch(new Request(
+    check.onChange.listen((Event v) => dispatch(new Request(
         RequestType.UPDATE_TODO,
         withValue: new Todo(_todo.label,
             check.checked, _todo.uid))));
@@ -170,11 +169,8 @@ class TodoItem extends ComponentBase {
 class TodoFooter extends ComponentBase {
 
   SpanElement label;
-  AnchorElement btArchive;
   AnchorElement btClear;
   AnchorElement btToggle;
-
-  List<Todo> _archives;
 
   set showCompleted(bool value) =>
       btToggle.text = value ? "Show remaining" : "Show completed";
@@ -186,21 +182,16 @@ class TodoFooter extends ComponentBase {
     label = new SpanElement()..text = "Archives :";
     addChild(label);
 
-    btArchive = new AnchorElement(href: '#')
-      ..text = "Archive"
-      ..onClick
-          .listen((e) => dispatcher.dispatch(new Request(RequestType.ARCHIVE)));
-
     btClear = new AnchorElement(href: '#')
       ..text = "Clear"
       ..onClick.listen(
-          (e) => dispatcher.dispatch(new Request(RequestType.CLEAR_ARCHIVES)));
+          (e) => dispatch(new Request(RequestType.CLEAR_ARCHIVES)));
 
     btToggle = new AnchorElement(href: '#')
       ..text = "Show completed"
       ..onClick.listen((e) =>
-          dispatcher.dispatch(new Request(RequestType.TOGGLE_SHOW_COMPLETED)));
-    addChildren([label, btArchive, btToggle, btClear]);
+          dispatch(new Request(RequestType.TOGGLE_SHOW_COMPLETED)));
+    addChildren([label, btToggle, btClear]);
   }
 
   TodoFooter([Element target = null]) : super(target) {
@@ -214,6 +205,5 @@ class TodoFooter extends ComponentBase {
           .map((el) =>
               isComponent(el) ? (el as ComponentBase).render() : el as Element)
           .toList();
-    ;
   }
 }

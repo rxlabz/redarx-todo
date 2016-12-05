@@ -1,5 +1,5 @@
 import 'package:redarx/redarx.dart';
-import 'package:todomvc0/model/todo.dart';
+import 'package:todo_redarx/model/todo.dart';
 
 class TodoModel extends AbstractModel {
   List<Todo> items;

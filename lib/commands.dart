@@ -1,6 +1,6 @@
 import 'package:redarx/redarx.dart';
-import 'package:todomvc0/model/model.dart';
-import 'package:todomvc0/model/todo.dart';
+import 'package:todo_redarx/model/model.dart';
+import 'package:todo_redarx/model/todo.dart';
 
 enum RequestType { ADD_TODO, UPDATE_TODO, ARCHIVE, CLEAR_ARCHIVES, TOGGLE_SHOW_COMPLETED }
 

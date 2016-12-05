@@ -1,7 +1,9 @@
 import 'dart:html';
 
 import 'package:redarx/redarx.dart';
-import 'package:todomvc0/components/mdl.dart';
+import 'package:todo_redarx/mdl/mdl.dart';
+
+typedef Dispatch(Request req);
 
 bool isComponent(el) => el is ComponentBase;
 
@@ -26,20 +28,24 @@ abstract class ComponentBase {
    */
   List<ComponentBase> get subComponents =>
       children.where((child) => isComponent(child)).toList()
-      as List<ComponentBase>;
+          as List<ComponentBase>;
 
   /**
-   * injected dispatcher
+   * Request dispatch function
    */
-  Dispatcher _dispatcher;
+  Dispatch _dispatch;
 
-  Dispatcher get dispatcher => _dispatcher;
+  Dispatch get dispatch => _dispatch;
 
-  set dispatcher(Dispatcher value) {
-    _dispatcher = value;
-    injectChildrenDispatcher(value);
+  set dispatch(Dispatch value) {
+    _dispatch = value;
+    injectChildrenDispatch(value);
   }
 
+  /**
+   * Abstract component base
+   * create a span root container if no target is passed
+   */
   ComponentBase([Element this.target = null]) {
     if (target == null) target = new SpanElement();
     children = [];
@@ -51,27 +57,26 @@ abstract class ComponentBase {
    */
   Element render();
 
-
   /**
    * componentBase Dispatcher hierarchical injection
    */
-  injectChildrenDispatcher(Dispatcher dispatcher) {
-    subComponents.forEach((c) => dispatcher);
+  injectChildrenDispatch(Dispatch dispatch) {
+    subComponents.forEach((c) => c.dispatch = dispatch);
   }
 
+  /**
+   * add child ( Element, MDComponent, Redarx ComponentBase ) and keep it in the component children list
+   */
   void addChild(dynamic el) {
-    if (el is ComponentBase) {
-      target.append((el as ComponentBase).render());
-    } else if (el is MDComponent) {
-      target.append((el as MDComponent).render());
-    } else {
-      target.append(el);
-    }
+    target
+        .append((el is ComponentBase || el is MDComponent) ? el.render() : el);
     children.add(el);
   }
 
+  /**
+   * add list of Element
+   */
   void addChildren(List<dynamic> els) {
     els.forEach((el) => addChild(el));
   }
-
 }
