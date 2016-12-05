@@ -13,7 +13,7 @@ enum RequestType {
 class AddTodoCommand<T extends TodoModel> implements Command<T> {
   Todo todo;
 
-  AddTodoCommand(Todo this.todo);
+  AddTodoCommand(this.todo);
 
   @override
   T exec(T model) => model..items.add(todo);
@@ -36,7 +36,7 @@ class ArchiveCommand<T extends TodoModel> implements Command<T> {
 class UpdateTodoCommand<T extends TodoModel> implements Command<T> {
   Todo todo;
 
-  UpdateTodoCommand(Todo this.todo);
+  UpdateTodoCommand(this.todo);
 
   @override
   T exec(T model) {
@@ -54,7 +54,8 @@ class UpdateTodoCommand<T extends TodoModel> implements Command<T> {
 
 class ClearArchivesCommand<T extends TodoModel> implements Command<T> {
   @override
-  T exec(T model) => model..items.where((t) => !t.completed).toList();
+  T exec(T model) =>
+      model..items = model.items.where((t) => !t.completed).toList();
 
   static CommandBuilder constructor() {
     return (t) => new ClearArchivesCommand();
