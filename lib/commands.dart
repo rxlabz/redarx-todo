@@ -10,22 +10,22 @@ enum RequestType {
   TOGGLE_SHOW_COMPLETED
 }
 
-class AddTodoCommand<T extends TodoModel> implements Command<T> {
+class AddTodoCommand extends Command<TodoModel> {
   Todo todo;
 
   AddTodoCommand(this.todo);
 
   @override
-  T exec(T model) => model..items.add(todo);
+  TodoModel exec(TodoModel model) => model..items.add(todo);
 
   static CommandBuilder constructor() {
     return (Todo todo) => new AddTodoCommand(todo);
   }
 }
 
-class ArchiveCommand<T extends TodoModel> implements Command<T> {
+class ArchiveCommand extends Command<TodoModel> {
   @override
-  T exec(T model) =>
+  TodoModel exec(TodoModel model) =>
       model..items = model.items.where((t) => !t.completed).toList();
 
   static CommandBuilder constructor() {
@@ -33,17 +33,19 @@ class ArchiveCommand<T extends TodoModel> implements Command<T> {
   }
 }
 
-class UpdateTodoCommand<T extends TodoModel> implements Command<T> {
+class UpdateTodoCommand extends Command<TodoModel> {
   Todo todo;
 
   UpdateTodoCommand(this.todo);
 
   @override
-  T exec(T model) {
+  TodoModel exec(TodoModel model) {
     var updated = model.items.singleWhere((t) => t.uid == todo.uid);
+
+    // todo : cascade refacto
     final updatedIndex = model.items.indexOf(updated);
-    model.items.removeAt(updatedIndex);
-    model.items.insert(updatedIndex, todo);
+    model.items..removeAt(updatedIndex);
+    model.items..insert(updatedIndex, todo);
     return model;
   }
 
@@ -52,19 +54,22 @@ class UpdateTodoCommand<T extends TodoModel> implements Command<T> {
   }
 }
 
-class ClearArchivesCommand<T extends TodoModel> implements Command<T> {
-  @override
-  T exec(T model) =>
-      model..items = model.items.where((t) => !t.completed).toList();
+class ClearArchivesCommand extends Command<TodoModel> {
 
+  @override
+  TodoModel exec(TodoModel model) {
+    return model..items = model.items.where((t) => !t.completed).toList();
+  }
+
+  @override
   static CommandBuilder constructor() {
     return (t) => new ClearArchivesCommand();
   }
 }
 
-class ToggleShowArchivesCommand<T extends TodoModel> implements Command<T> {
+class ToggleShowArchivesCommand extends Command<TodoModel> {
   @override
-  T exec(T model) => model..showCompleted = !model.showCompleted;
+  TodoModel exec(TodoModel model) => model..showCompleted = !model.showCompleted;
 
   static CommandBuilder constructor() {
     return (t) => new ToggleShowArchivesCommand();
