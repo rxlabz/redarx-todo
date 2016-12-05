@@ -40,12 +40,9 @@ class UpdateTodoCommand extends Command<TodoModel> {
 
   @override
   TodoModel exec(TodoModel model) {
-    var updated = model.items.singleWhere((t) => t.uid == todo.uid);
-
-    // todo : cascade refacto
+    final updated = model.items.singleWhere((t) => t.uid == todo.uid);
     final updatedIndex = model.items.indexOf(updated);
-    model.items..removeAt(updatedIndex);
-    model.items..insert(updatedIndex, todo);
+    model.items.replaceRange(updatedIndex, updatedIndex+1, [todo]);
     return model;
   }
 
@@ -55,7 +52,6 @@ class UpdateTodoCommand extends Command<TodoModel> {
 }
 
 class ClearArchivesCommand extends Command<TodoModel> {
-
   @override
   TodoModel exec(TodoModel model) {
     return model..items = model.items.where((t) => !t.completed).toList();
@@ -69,7 +65,8 @@ class ClearArchivesCommand extends Command<TodoModel> {
 
 class ToggleShowArchivesCommand extends Command<TodoModel> {
   @override
-  TodoModel exec(TodoModel model) => model..showCompleted = !model.showCompleted;
+  TodoModel exec(TodoModel model) =>
+      model..showCompleted = !model.showCompleted;
 
   static CommandBuilder constructor() {
     return (t) => new ToggleShowArchivesCommand();
