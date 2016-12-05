@@ -11,14 +11,20 @@ html, body {
 
 #app{
     width: 500px;
-    margin: 0 auto;
-}
-
-div {
-    margin: 14px;
+    margin: 60px auto;
 }
 
 .row{
+    width: 100%;
     display: flex;
     justify-content: space-around;
+}
+
+#form{
+    padding-left: 38px;
+}
+
+#footer{
+    margin-top: 8px;
+    font-size:0.9rem;
 }
