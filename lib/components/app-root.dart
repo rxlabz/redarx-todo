@@ -36,13 +36,13 @@ class AppComponent extends ComponentBase {
   }
 
   void initView() {
-    form = new TodoForm(new DivElement());
+    form = new TodoForm(new DivElement()..classes.add('row')..id = 'form');
     children.add(form);
 
     list = new TodoList();
     children.add(list);
 
-    footer = new TodoFooter(new DivElement()..classes.add('row'));
+    footer = new TodoFooter(new DivElement()..classes.add('row')..id = 'footer');
     children.add(footer);
 
     MDCard card = new MDCard(
@@ -52,7 +52,7 @@ class AppComponent extends ComponentBase {
 
   void listen() {
     model$.listen((TodoModel model) {
-      print('AppComponent.AppComponent  onModel ${model}');
+      print('AppComponent.AppComponent onModel ${model}');
       list.todos = model.todos;
       footer.numCompleted = model.numCompleted;
       footer.numRemaining = model.numRemaining;
