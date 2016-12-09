@@ -14,7 +14,7 @@ import 'package:todo_redarx/model/todo.dart';
  * root component
  * displays a todo form , a todo list and a toolbar in a MDL card
  */
-class AppComponent extends ComponentBase {
+class AppComponent<T extends TodoModel> extends ComponentBase {
 
   TodoForm form;
   TodoList list;
@@ -24,9 +24,10 @@ class AppComponent extends ComponentBase {
 
   StreamSubscription modelSub;
 
-  Stream<TodoModel> _model$;
+  Stream<T> _model$;
 
-  set model$(Stream<TodoModel> value) {
+  set model$(Stream<T> value) {
+    print('AppComponent.model value ${value}');
     _model$ = value;
     listen();
   }

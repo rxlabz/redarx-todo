@@ -57,7 +57,6 @@ class ClearArchivesCommand extends Command<TodoModel> {
     return model..items = model.items.where((t) => !t.completed).toList();
   }
 
-  @override
   static CommandBuilder constructor() {
     return (t) => new ClearArchivesCommand();
   }

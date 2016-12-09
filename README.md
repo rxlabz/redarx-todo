@@ -1,4 +1,4 @@
-# Redarx example
+# Redarx state management example
 
 [Demo](https://rxlabz.github.io/redarx-todo/)
 
