@@ -7,7 +7,8 @@ enum RequestType {
   UPDATE_TODO,
   ARCHIVE,
   CLEAR_ARCHIVES,
-  TOGGLE_SHOW_COMPLETED
+  TOGGLE_SHOW_COMPLETED,
+  LOAD_ALL
 }
 
 class AddTodoCommand extends Command<TodoModel> {
@@ -42,8 +43,7 @@ class UpdateTodoCommand extends Command<TodoModel> {
   TodoModel exec(TodoModel model) {
     final updated = model.items.singleWhere((t) => t.uid == todo.uid);
     final updatedIndex = model.items.indexOf(updated);
-    model.items.replaceRange(updatedIndex, updatedIndex+1, [todo]);
-    return model;
+    return model..items.replaceRange(updatedIndex, updatedIndex + 1, [todo]);
   }
 
   static CommandBuilder constructor() {
@@ -53,12 +53,25 @@ class UpdateTodoCommand extends Command<TodoModel> {
 
 class ClearArchivesCommand extends Command<TodoModel> {
   @override
-  TodoModel exec(TodoModel model) {
-    return model..items = model.items.where((t) => !t.completed).toList();
-  }
+  TodoModel exec(TodoModel model) =>
+      model..items = model.items.where((t) => !t.completed).toList();
 
   static CommandBuilder constructor() {
     return (t) => new ClearArchivesCommand();
+  }
+}
+
+class CompleteAllCommand extends Command<TodoModel> {
+  @override
+  TodoModel exec(TodoModel model) =>
+      model
+        ..items = model.items.map((item) {
+          item.completed = true;
+          return item;
+        }).toList();
+
+  static CommandBuilder constructor() {
+    return (t) => new CompleteAllCommand();
   }
 }
 
