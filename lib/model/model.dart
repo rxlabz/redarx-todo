@@ -4,14 +4,14 @@ import 'package:todo_redarx/model/todo.dart';
 class TodoModel extends AbstractModel {
   List<Todo> items;
 
+  bool showCompleted;
+
   List<Todo> get todos =>
       items.where((t) => showCompleted ? t.completed : !t.completed).toList();
 
   int get numCompleted => items.where((t)=>t.completed).length;
 
   int get numRemaining => items.where((t)=>!t.completed).length;
-
-  bool showCompleted;
 
   TodoModel.empty() {
     showCompleted = false;

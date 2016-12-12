@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:html';
 
+import 'package:redarx/redarx.dart';
+import 'package:todo_redarx/commands.dart';
 import 'package:todo_redarx/components/component-base.dart';
 import 'package:todo_redarx/components/todo-footer.dart';
 import 'package:todo_redarx/components/todo-form.dart';
@@ -8,7 +10,6 @@ import 'package:todo_redarx/components/todo-list.dart';
 import 'package:todo_redarx/components/ui-helper.dart';
 import 'package:todo_redarx/mdl/md-card.dart';
 import 'package:todo_redarx/model/model.dart';
-import 'package:todo_redarx/model/todo.dart';
 
 /**
  * root component
@@ -20,8 +21,7 @@ class AppComponent<T extends TodoModel> extends ComponentBase {
   TodoList list;
   TodoFooter footer;
 
-  List<Todo> archivedTodos = [];
-
+  // state$ subscription
   StreamSubscription modelSub;
 
   Stream<T> _model$;
@@ -38,10 +38,12 @@ class AppComponent<T extends TodoModel> extends ComponentBase {
     subComponents.forEach((c) => c.dispatch = value);
   }
 
+  // COnstructor : initialize children
   AppComponent(Element target) : super(target) {
     initView();
   }
 
+  // initialize UI components
   void initView() {
     form = new TodoForm(div(classes:'row',id:'form'));
     children.add(form);
@@ -56,6 +58,9 @@ class AppComponent<T extends TodoModel> extends ComponentBase {
         title: form.render(), content: list.render(), footer: footer.render());
     addChild(card);
   }
+
+  /// dispatch a request to load all todos
+  loadAll() => dispatch(new Request(RequestType.LOAD_ALL));
 
   void listen() {
     if( modelSub != null) modelSub.cancel();

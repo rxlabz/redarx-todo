@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:html';
+
 import 'package:redarx/redarx.dart';
 import 'package:todo_redarx/model/model.dart';
 import 'package:todo_redarx/model/todo.dart';
@@ -5,12 +9,42 @@ import 'package:todo_redarx/model/todo.dart';
 enum RequestType {
   ADD_TODO,
   UPDATE_TODO,
-  ARCHIVE,
   CLEAR_ARCHIVES,
   TOGGLE_SHOW_COMPLETED,
+  COMPLETE_ALL,
   LOAD_ALL
 }
 
+/// async json loader
+class AsyncLoadAllCommand extends AsyncCommand<TodoModel> {
+
+  String path;
+
+  TodoModel _lastState;
+
+  TodoModel get lastState => _lastState;
+
+  AsyncLoadAllCommand(this.path);
+
+  @override
+  Future<TodoModel> execAsync(TodoModel model) async {
+    model.items = await loadAll();
+    _lastState = model;
+    return model;
+  }
+
+  Future<List<Todo>> loadAll() async {
+    var data = await HttpRequest.getString('todos.json');
+    return (JSON.decode(data)['todos'] as List<dynamic>)
+        .map((d) => new Todo.fromMap(d)).toList();
+  }
+
+  static AsyncCommandBuilder constructor(path) {
+    return (t) => new AsyncLoadAllCommand(path);
+  }
+}
+
+/// add a new task
 class AddTodoCommand extends Command<TodoModel> {
   Todo todo;
 
@@ -24,16 +58,7 @@ class AddTodoCommand extends Command<TodoModel> {
   }
 }
 
-class ArchiveCommand extends Command<TodoModel> {
-  @override
-  TodoModel exec(TodoModel model) =>
-      model..items = model.items.where((t) => !t.completed).toList();
-
-  static CommandBuilder constructor() {
-    return (t) => new ArchiveCommand();
-  }
-}
-
+/// change task state
 class UpdateTodoCommand extends Command<TodoModel> {
   Todo todo;
 
@@ -51,6 +76,7 @@ class UpdateTodoCommand extends Command<TodoModel> {
   }
 }
 
+/// remove completed tasks from archives
 class ClearArchivesCommand extends Command<TodoModel> {
   @override
   TodoModel exec(TodoModel model) =>
@@ -61,6 +87,7 @@ class ClearArchivesCommand extends Command<TodoModel> {
   }
 }
 
+/// complete all tasks
 class CompleteAllCommand extends Command<TodoModel> {
   @override
   TodoModel exec(TodoModel model) =>
@@ -75,6 +102,7 @@ class CompleteAllCommand extends Command<TodoModel> {
   }
 }
 
+/// toggle view remaining | completed
 class ToggleShowArchivesCommand extends Command<TodoModel> {
   @override
   TodoModel exec(TodoModel model) =>

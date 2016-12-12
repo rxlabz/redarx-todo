@@ -9,6 +9,7 @@ class TodoFooter extends ComponentBase {
   SpanElement label;
   AnchorElement btClear;
   AnchorElement btToggle;
+  AnchorElement btCompleteAll;
 
   set showCompleted(bool value) {
     btToggle.text =
@@ -32,12 +33,17 @@ class TodoFooter extends ComponentBase {
         label: "Clear",
         onClick: (e) => dispatch(new Request(RequestType.CLEAR_ARCHIVES)));
 
+    btCompleteAll = a(
+        href: '#',
+        label: "Complete all",
+        onClick: (e) => dispatch(new Request(RequestType.COMPLETE_ALL)));
+
     btToggle = a(
         href: '#',
         label: "Show completed",
         onClick: (e) =>
             dispatch(new Request(RequestType.TOGGLE_SHOW_COMPLETED)));
-    addChildren([label, btToggle, btClear]);
+    addChildren([label, btCompleteAll, btToggle, btClear]);
   }
 
   TodoFooter([Element target = null]) : super(target) {

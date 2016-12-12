@@ -1,0 +1,24 @@
+{
+  "todos": [
+    {
+      "uid": 1,
+      "label": "todo 1",
+      "completed": 0
+    },
+    {
+      "uid": 2,
+      "label": "todo 2",
+      "completed": 0
+    },
+    {
+      "uid": 3,
+      "label": "todo 3",
+      "completed": 1
+    },
+    {
+      "uid": 4,
+      "label": "todo 4",
+      "completed": 0
+    }
+  ]
+}
